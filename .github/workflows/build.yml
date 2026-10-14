@@ -12,16 +12,23 @@ permissions:
 jobs:
   build:
     runs-on: macos-14
+
     steps:
-      - name: Checkout
+      - name: Checkout Lumi
         uses: actions/checkout@v4
 
-      - name: Prepare SDK directory
-        run: mkdir -p theos/sdks
-
       - name: Set up Theos
-        uses: Randomblock1/theos-action@v1
+        uses: beerpiss/theos-action@v1
         with:
           theos-dir: theos
-          theos-src: https://github.com/theos/theos
           theos-sdks: https://github.com/theos/sdks
+
+      - name: Build Lumi
+        run: make package
+
+      - name: Upload Lumi package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Lumi-build
+          path: packages/*.deb
+          if-no-files-found: error
