@@ -20,8 +20,8 @@ static UIView *LUMIPanel;
 static UILabel *LUMIStats;
 static CADisplayLink *LUMIDisplayLink;
 static NSTimer *LUMITimer;
-static id LUMIActionTarget;
-static id LUMIFrameTarget;
+static id gLUMIActionTarget;
+static id gLUMIFrameTarget;
 static CFTimeInterval LUMILastSample;
 static NSUInteger LUMIFrameCount;
 static double LUMIFPS;
@@ -112,7 +112,7 @@ static void LUMIUpdateStats(void) {
     if (LUMIPanelVisible) {
         LUMILastSample = 0;
         LUMIFrameCount = 0;
-        LUMIDisplayLink = [CADisplayLink displayLinkWithTarget:LUMIFrameTarget
+        LUMIDisplayLink = [CADisplayLink displayLinkWithTarget:gLUMIFrameTarget
                                                      selector:@selector(tick:)];
         [LUMIDisplayLink addToRunLoop:NSRunLoop.mainRunLoop forMode:NSRunLoopCommonModes];
         LUMITimer = [NSTimer scheduledTimerWithTimeInterval:1.0 repeats:YES
@@ -148,8 +148,8 @@ static void LUMIInstall(void) {
     controller.view.backgroundColor = UIColor.clearColor;
     LUMIWindow.rootViewController = controller;
 
-    LUMIActionTarget = [LUMIActionTarget new];
-    LUMIFrameTarget = [LUMIFrameTarget new];
+    gLUMIActionTarget = [LUMIActionTarget new];
+    gLUMIFrameTarget = [LUMIFrameTarget new];
 
     LUMIButton = [UIButton buttonWithType:UIButtonTypeSystem];
     LUMIButton.frame = CGRectMake(12, bounds.size.height * 0.72, 48, 48);
@@ -158,10 +158,10 @@ static void LUMIInstall(void) {
     [LUMIButton setTitle:@"L" forState:UIControlStateNormal];
     [LUMIButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     LUMIButton.titleLabel.font = [UIFont boldSystemFontOfSize:23];
-    [LUMIButton addTarget:LUMIActionTarget action:@selector(togglePanel)
+    [LUMIButton addTarget:gLUMIActionTarget action:@selector(togglePanel)
          forControlEvents:UIControlEventTouchUpInside];
     [LUMIButton addGestureRecognizer:[[UIPanGestureRecognizer alloc]
-                                      initWithTarget:LUMIActionTarget
+                                      initWithTarget:gLUMIActionTarget
                                       action:@selector(dragButton:)]];
 
     CGFloat panelWidth = MIN(bounds.size.width - 24, 340);
