@@ -7,6 +7,6 @@ include $(THEOS)/makefiles/common.mk
 TWEAK_NAME = Lumi
 Lumi_FILES = Lumi.m
 Lumi_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
-Lumi_FRAMEWORKS = UIKit Foundation QuartzCore
+Lumi_FRAMEWORKS = UIKit Foundation QuartzCore CoreGraphics
 
 include $(THEOS_MAKE_PATH)/tweak.mk
