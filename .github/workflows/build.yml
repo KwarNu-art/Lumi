@@ -1,0 +1,47 @@
+name: Build Lumi
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Theos
+        uses: Randomblock1/theos-action@v1
+        with:
+          theos-dir: theos
+          theos-src: https://github.com/theos/theos
+          theos-sdks: https://github.com/theos/sdks
+
+      - name: Build rootless package (iOS 15+ jailbreaks)
+        run: |
+          rm -rf packages artifacts/rootless
+          make clean package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mkdir -p artifacts/rootless
+          cp packages/*.deb artifacts/rootless/
+          find .theos -name Lumi.dylib -exec cp {} artifacts/rootless/ \; || true
+
+      - name: Build rootful package (legacy jailbreak layout)
+        run: |
+          rm -rf packages artifacts/rootful
+          make clean package FINALPACKAGE=1
+          mkdir -p artifacts/rootful
+          cp packages/*.deb artifacts/rootful/
+          find .theos -name Lumi.dylib -exec cp {} artifacts/rootful/ \; || true
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lumi-builds
+          path: artifacts/
+          if-no-files-found: warn
