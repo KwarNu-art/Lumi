@@ -1,9 +1,0 @@
-Package: com.lumi.iphone
-Name: Lumi
-Version: 0.1.0
-Architecture: iphoneos-arm
-Description: Lightweight device-status overlay prototype for iOS 15.
-Maintainer: Lumi Project
-Author: Lumi Project
-Section: Tweaks
-Depends: mobilesubstrate
