@@ -27,8 +27,7 @@ jobs:
           submodules: recursive
 
       - name: Install build tools
-        run: |
-          brew install ldid xz
+        run: brew install ldid xz
 
       - name: Get Theos (fresh every build)
         run: |
@@ -37,12 +36,12 @@ jobs:
 
       - name: Get iOS SDKs
         run: |
+          rm -rf "$THEOS/sdks"
           git clone --depth 1 https://github.com/theos/sdks.git "$THEOS/sdks"
           ls "$THEOS/sdks"
 
       - name: Build package
-        run: |
-          make package FINALPACKAGE=1
+        run: make package FINALPACKAGE=1
 
       - name: List output
         run: ls -lh packages/
